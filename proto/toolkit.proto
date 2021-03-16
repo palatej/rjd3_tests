@@ -1,0 +1,313 @@
+syntax = "proto3";
+
+package jd3;
+
+option java_package = "demetra.toolkit.io.protobuf";
+option java_outer_classname = "ToolkitProtos";
+
+import "struct.proto";
+
+enum SelectionType {
+    SPAN_UNSPECIFIED=0;
+	SPAN_ALL=1;
+	SPAN_FROM=2;
+	SPAN_TO=3;
+	SPAN_BETWEEN=4;
+	SPAN_LAST=5;
+	SPAN_FIRST=6;
+	SPAN_EXCLUDING=7;
+}
+
+message Date {
+  // Year of the date. Must be from 1 to 9999, or 0 to specify a date without
+  // a year.
+  int32 year = 1;
+
+  // Month of a year. Must be from 1 to 12, or 0 to specify a year without a
+  // month and day.
+  int32 month = 2;
+
+  // Day of a month. Must be from 1 to 31 and valid for the year and month, or 0
+  // to specify a year by itself or a year and month where the day isn't
+  // significant.
+  int32 day = 3;
+}
+ 
+
+message TimeSelector{
+	SelectionType type = 1;
+	int32 n0 = 2;
+	int32 n1 = 3;
+	Date d0 = 4;
+	Date d1 = 5;
+}
+
+enum ParameterType{
+	PARAMETER_UNDEFINED = 0;
+	PARAMETER_FIXED = 1;
+	PARAMETER_INITIAL = 2;
+	PARAMETER_ESTIMATED = 3;
+}
+
+message Parameter{
+	double value = 1;
+	ParameterType type = 2;
+}
+
+message NullableParameter{
+  oneof kind {
+    google.protobuf.NullValue null = 1;
+    Parameter data = 2;
+  }
+}
+
+message TsPeriod{
+	int32 annual_frequency = 1;
+	int32 year = 2;
+	int32 pos = 3;
+}
+
+
+message TsData{
+	string name = 1;
+	int32 annual_frequency = 2;
+	int32 start_year = 3;
+	int32 start_period = 4;
+	repeated double values = 5;
+}
+
+message Matrix{
+	string name = 1;
+	int32 nrows = 2;
+	int32 ncols = 3;
+	repeated double values = 4;
+}
+
+message TsMatrix{
+	string name = 1;
+	int32 annual_frequency = 2;
+	int32 start_year = 3;
+	int32 start_period = 4;
+	Matrix values = 5;
+}
+
+message StatisticalTest{
+	double value = 1;
+	double pvalue = 2;
+	string description = 3;
+}
+
+message ParameterEstimation{
+	string name = 1;
+	double value = 2;
+	double stde = 3;
+	double pvalue = 4;
+}
+
+message LikelihoodStatistics{
+	int32 nobs = 1;
+	int32 neffectiveobs = 2;
+	int32 nparams = 3;
+	int32 degrees_of_freedom = 4;
+	double log_likelihood = 5;
+	double adjusted_log_likelihood = 6;
+	double aic = 7;
+	double aicc = 8;
+	double bic = 9;
+	double bicc = 10;
+	double bic2 = 11;
+	double hannan_quinn = 12;
+	double ssq = 13;
+}
+
+message ArimaModel{
+	string name = 1;
+	double innovation_variance = 2;
+	repeated double ar = 3;
+	repeated double delta = 4;
+	repeated double ma = 5;
+}
+
+message NIIDTests{
+	/* Normality */
+	StatisticalTest mean = 1;
+	StatisticalTest skewness = 2;
+	StatisticalTest kurtosis = 3;
+	StatisticalTest doornik_hansen = 4;
+
+	/* Independence */
+	StatisticalTest ljung_box = 5;
+	StatisticalTest box_pierce = 6;
+	StatisticalTest seasonal_ljung_box = 7;
+	StatisticalTest seasonal_box_pierce = 8;
+	
+	/* Randomness */
+    StatisticalTest runs_number = 9;
+	StatisticalTest runs_length = 10;
+	StatisticalTest up_down_runs_number = 11;
+	StatisticalTest up_down_runs_length = 12;
+	
+	/* Linearity */
+	StatisticalTest ljung_box_on_squares = 13;
+	StatisticalTest box_pierce_on_squares = 14;
+}
+
+/* Calendars */
+
+message ValidityPeriod {
+	Date start = 1;
+	Date end = 2;
+}
+
+enum CalendarEvent{
+	HOLIDAY_UNSPECIFIED = 0;
+    /**
+     * January, 1
+     */
+    HOLIDAY_NEWYEAR = 1;
+    /**
+     * Shrove Monday (48 days before Easter)
+     */
+    HOLIDAY_SHROVEMONDAY = 2;
+    /**
+     * Shrove Tuesday (47 days before Easter)
+     */
+    HOLIDAY_SHROVETUESDAY = 3;
+    /**
+     * AshWednesday (46 days before Easter)
+     */
+    HOLIDAY_ASHWEDNESDAY = 4;
+    /**
+     * Easter
+     */
+    HOLIDAY_EASTER = 5;
+    /**
+     * Julian Easter. 
+     */
+    HOLIDAY_JULIANEASTER = 6;
+    /**
+     * Last Thursday before Easter
+     */
+    HOLIDAY_MAUNDYTHURSDAY = 7;
+    /**
+     * Last Friday before Easter
+     */
+    HOLIDAY_GOODFRIDAY = 8;
+    /**
+     * First Monday after Easter
+     */
+    HOLIDAY_EASTERMONDAY = 9;
+    /**
+     * Ascension (40 days after Easter)
+     */
+    HOLIDAY_ASCENSION = 10;
+    /**
+     * Pentecost (50 days after Easter)
+     */
+    HOLIDAY_PENTECOST = 11;
+    /**
+     * Corpus Christi (60 days after Easter)
+     */
+    HOLIDAY_CORPUSCHRISTI = 12;
+    /**
+     * First Monday after Pentecost (50 days after Easter)
+     */
+    HOLIDAY_WHITMONDAY = 13;
+    /**
+     * May, 1
+     */
+    HOLIDAY_MAYDAY = 14;
+    /**
+     * August, 15
+     */
+    HOLIDAY_ASSUMPTION = 15;
+    /**
+     * Second Tuesday of September
+     */
+    HOLIDAY_LABORDAY = 16;
+    /**
+     * October, 31
+     */
+    HOLIDAY_HALLOWEEN = 17;
+    /**
+     * November, 1
+     */
+    HOLIDAY_ALLSAINTDAY = 18;
+    /**
+     * November, 11
+     */
+    HOLIDAY_ARMISTICE = 19;
+    /**
+     * Fourth Thursday of November
+     */
+    HOLIDAY_THANKSGIVING = 20;
+    /**
+     * December, 25
+     */
+    HOLIDAY_CHRISTMAS = 21;
+}
+
+message FixedDay{
+	int32 month = 1;
+	int32 day = 2;
+	double weight = 3;
+	ValidityPeriod validity = 4;
+}
+
+message EasterRelatedDay{
+	int32 offset = 1;
+	bool julian = 2;
+	double weight = 3;
+	ValidityPeriod validity = 4;
+}
+
+message PrespecifiedHoliday{
+	CalendarEvent event = 1;
+	int32 offset = 2;
+	double weight = 3;
+	ValidityPeriod validity = 4;
+}
+
+message FixedWeekDay{
+	int32 month = 1;
+	/* Corresponds to the first, second...)*/
+	int32 position = 2; 
+	/* ISO-8601 standard, from 1 (Monday) to 7 (Sunday) */
+	int32 weekday = 3;
+	double weight = 4;
+	ValidityPeriod validity = 5;
+}
+
+message CalendarDefinition{
+	oneof definition{
+		Calendar calendar = 1;
+		WeightedCalendar  weighted_calendar = 2;
+		ChainedCalendar chained_calendar = 3;
+	}
+}
+
+message Calendar{
+	repeated FixedDay fixed_days = 1;
+	repeated EasterRelatedDay easter_related_days = 2;
+	repeated FixedWeekDay fixed_week_days = 3;
+	repeated PrespecifiedHoliday prespecified_holidays = 4;
+}
+
+message WeightedCalendar{
+	message Item{
+		CalendarDefinition calendar = 1;
+		double weight = 2;
+	}
+	repeated Item items = 1;
+}
+
+message ChainedCalendar{
+	CalendarDefinition calendar1 = 1;
+	CalendarDefinition calendar2 = 2;
+	Date break = 3;
+}
+
+message ModellingContext{
+	map<string, CalendarDefinition> calendars = 1;
+	map<string, TsData> variables = 2; 
+}
