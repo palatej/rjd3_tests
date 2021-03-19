@@ -8,7 +8,7 @@ option java_outer_classname = "ToolkitProtos";
 import "struct.proto";
 
 enum SelectionType {
-    SPAN_UNSPECIFIED=0;
+    SPAN_NONE=0;
 	SPAN_ALL=1;
 	SPAN_FROM=2;
 	SPAN_TO=3;
@@ -52,7 +52,16 @@ enum ParameterType{
 message Parameter{
 	double value = 1;
 	ParameterType type = 2;
+	string description = 3;
 }
+
+message ParametersEstimation{
+	repeated double value = 1;
+	repeated double score = 2;
+	Matrix covariance = 3;
+	string description = 4; 
+}
+
 
 message NullableParameter{
   oneof kind {

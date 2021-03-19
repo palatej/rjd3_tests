@@ -166,9 +166,16 @@ longTermMean<-function(calendar,frequency,groups=c(1,2,3,4,5,6,0)){
 belgiumCalendar<-newCalendar()
 addFixedDayToCalendar(belgiumCalendar, 7, 21)
 addPrespecifiedHolidayToCalendar(belgiumCalendar, "NEWYEAR")
-addEasterRelatedDayToCalendar(belgiumCalendar, 1)
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "CHRISTMAS")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "MAYDAY")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "EASTERMONDAY")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "WHITMONDAY")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "ASSUMPTION")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "ALLSAINTDAY")
+addPrespecifiedHolidayToCalendar(belgiumCalendar, "ARMISTICE")
 
-M<-td(12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = F)
+M<-td(12, c(1980,1), 120, c(1,1,1,1,2,3,0), contrasts = F)
+
 H<-htd(belgiumCalendar, 12, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts =F)
 
 MC<-td(4, c(1980,1), 120, c(1,1,1,1,1,2,0), contrasts = T)
